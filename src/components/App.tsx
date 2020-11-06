@@ -40,8 +40,6 @@ function App() {
         ))}
       </div>
 
-      <div style={{ flexGrow: 1, maxHeight: '15vh' }} />
-
       <PlayerHand hand={hands[0]} />
     </div>
   );

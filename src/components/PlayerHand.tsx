@@ -18,10 +18,13 @@ export interface PlayerHandProps {
 
 export default function PlayerHand(props: PlayerHandProps) {
   return (
-    <div className={handStlying}>
-      {props.hand.map((card: Card, index) => (
-        <PlayerCard card={card} index={index} />
-      ))}
+    <div style={{ paddingTop: 20, textAlign: 'center' }}>
+      <h2>Player 1 Hand</h2>
+      <div className={handStlying}>
+        {props.hand.map((card: Card, index) => (
+          <PlayerCard card={card} index={index} />
+        ))}
+      </div>
     </div>
   );
 }
