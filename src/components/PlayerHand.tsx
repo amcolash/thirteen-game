@@ -1,6 +1,6 @@
 import React from 'react';
 import { style } from 'typestyle';
-import { Card } from '../util/generate';
+import { Card, cardWins } from '../util/generate';
 import PlayerCard from './PlayerCard';
 
 const handStlying = style({
@@ -16,6 +16,7 @@ interface PlayerHandProps {
   hand: Card[];
   player: number;
   turn: number;
+  lastCard?: Card;
   playCard: (card: Card) => void;
 }
 
@@ -25,7 +26,13 @@ export default function PlayerHand(props: PlayerHandProps) {
       <h2>Player {props.player + 1} Hand</h2>
       <div className={handStlying}>
         {props.hand.map((card: Card, index) => (
-          <PlayerCard card={card} index={index} key={index} enabled={props.player === props.turn} playCard={props.playCard} />
+          <PlayerCard
+            card={card}
+            index={index}
+            key={index}
+            enabled={props.player === props.turn && cardWins(card, props.lastCard)}
+            playCard={props.playCard}
+          />
         ))}
       </div>
     </div>

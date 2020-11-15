@@ -91,7 +91,7 @@ class App extends React.Component<{}, GameState> {
         const card = sorted[i];
         if (cardWins(card, this.state.lastCard)) lost = false;
       }
-      if (lost) this.setState({ lastCard: undefined, turn: (this.state.turn + 1) % this.state.numPlayers });
+      if (lost) this.setState({ lastCard: undefined, turn: (this.state.turn + 1) % this.state.numPlayers, playedCards: [] });
     }
   }
 
@@ -109,10 +109,9 @@ class App extends React.Component<{}, GameState> {
         <PlayerHand
           player={this.state.currentPlayer}
           turn={this.state.turn}
+          lastCard={this.state.lastCard}
           hand={this.state.hands[this.state.currentPlayer]}
-          playCard={(card: Card) => {
-            if (cardWins(card, this.state.lastCard)) this.playCard(card);
-          }}
+          playCard={(card: Card) => this.playCard(card)}
         />
       </div>
     );
