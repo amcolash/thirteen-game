@@ -1,6 +1,7 @@
 import React from 'react';
 import { style } from 'typestyle';
-import { Card, generateCardInfo, generateDeck, generateHand, shuffleDeck } from '../util/generate';
+import { Card, Deck, generateDeck, generateHands, shuffleDeck } from '../util/generate';
+import DebugDeck from './DeckDebug';
 import PlayerHand from './PlayerHand';
 
 const appStyle = style({
@@ -20,29 +21,47 @@ const appStyle = style({
   justifyContent: 'center',
 });
 
-function App() {
-  const deck = shuffleDeck(generateDeck());
-  const hands: Card[][] = [];
-  const numPlayers = 4;
+interface GameState {
+  deck: Deck;
+  hands: Card[][];
+  numPlayers: number;
+  playedCards: Card[];
+  currentPlayer: number;
+}
 
-  for (let i = 0; i < numPlayers; i++) {
-    hands.push(generateHand(52 / numPlayers, deck));
+class App extends React.Component<{}, GameState> {
+  constructor(props: {}) {
+    super(props);
+
+    const numPlayers = 4;
+    const currentPlayer = 0;
+    const deck = shuffleDeck(generateDeck());
+    const hands = generateHands(numPlayers, deck);
+
+    this.state = {
+      deck,
+      hands,
+      numPlayers,
+      playedCards: [],
+      currentPlayer,
+    };
   }
 
-  return (
-    <div className={appStyle}>
-      <div style={{ display: 'flex', borderRadius: 10, background: 'rgba(255,255,255,0.35)' }}>
-        {hands.map((hand, index) => (
-          <div style={{ padding: 20 }}>
-            <div>Player {index}</div>
-            {hand.map((card: Card) => generateCardInfo(card, false, false, { justifyContent: 'center', padding: 2, textShadow: 'none' }))}
-          </div>
-        ))}
-      </div>
+  render(): React.ReactNode {
+    return (
+      <div className={appStyle}>
+        <DebugDeck hands={this.state.hands} />
 
-      <PlayerHand hand={hands[0]} />
-    </div>
-  );
+        <PlayerHand
+          player={this.state.currentPlayer}
+          hand={this.state.hands[this.state.currentPlayer]}
+          playCard={(card: Card) => {
+            console.log(card);
+          }}
+        />
+      </div>
+    );
+  }
 }
 
 export default App;

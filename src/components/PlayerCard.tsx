@@ -1,5 +1,5 @@
 import React from 'react';
-// import Draggable from 'react-draggable';
+import Draggable from 'react-draggable';
 
 import { style } from 'typestyle';
 import { Card, generateCardInfo } from '../util/generate';
@@ -38,24 +38,27 @@ function lerpMulti(amt: number, values: number[]) {
   return lerp(values[Math.floor(amt / cunit)], values[Math.ceil(amt / cunit)], (amt % cunit) / cunit);
 }
 
-export interface PlayerCardProps {
+interface PlayerCardProps {
   card: Card;
   index: number;
+  playCard: (card: Card) => void;
 }
 
 export default function PlayerCard(props: PlayerCardProps) {
   return (
-    // <Draggable> Draggable does not play nice with pre-styled transforms - thinking emoji...
-    <div
-      className={cardStlying}
-      style={{
-        marginLeft: props.index === 0 ? 8 : undefined,
-        transform: `rotate(${lerp(-20, 20, props.index / 12)}deg) translateY(${lerpMulti(props.index / 12, [0, -20, -30, -20, 0]) + 10}px)`,
-      }}
-    >
-      <div style={{ position: 'absolute', top: size / 3, left: size / 3 }}>{generateCardInfo(props.card, true, true)}</div>
-      <div style={{ position: 'absolute', bottom: size / 3, right: size / 3 }}>{generateCardInfo(props.card, true, false)}</div>
-    </div>
-    // </Draggable>
+    <Draggable>
+      {/*Draggable does not play nice with pre-styled transforms - thinking emoji...*/}
+      <div
+        className={cardStlying}
+        style={{
+          marginLeft: props.index === 0 ? 8 : undefined,
+          // transform: `rotate(${lerp(-20, 20, props.index / 13)}deg) translateY(${lerpMulti(props.index / 13, [0, -20, -30, -20, 0]) + 10}px)`,
+        }}
+        onClick={() => props.playCard(props.card)}
+      >
+        <div style={{ position: 'absolute', top: size / 3, left: size / 3 }}>{generateCardInfo(props.card, true, true)}</div>
+        <div style={{ position: 'absolute', bottom: size / 3, right: size / 3 }}>{generateCardInfo(props.card, true, false)}</div>
+      </div>
+    </Draggable>
   );
 }

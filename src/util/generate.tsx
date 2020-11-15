@@ -1,8 +1,34 @@
 import React, { CSSProperties } from 'react';
 
+export type Suite = 'S' | 'H' | 'C' | 'D';
+export type CardValue = 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 'J' | 'Q' | 'K' | 'A' | 2;
+
+export const suitOrdinal: { [suite in Suite]: number } = {
+  H: 0,
+  D: 1,
+  C: 2,
+  S: 3,
+};
+
+export const cardOrdinal: { [value in CardValue]: number } = {
+  '3': 0,
+  '4': 1,
+  '5': 2,
+  '6': 3,
+  '7': 4,
+  '8': 5,
+  '9': 6,
+  '10': 7,
+  J: 8,
+  Q: 9,
+  K: 10,
+  A: 11,
+  '2': 12,
+};
+
 export interface Card {
-  suit: 'S' | 'H' | 'C' | 'D'; // spades, hearts, clubs, diamonds
-  value: number; // where number is from 1-13, 1-9 = normal, 10 = J, 11 = Q, 12 = K, 13 = A
+  suit: Suite; // spades, hearts, clubs, diamonds
+  value: CardValue; // number from 2-10, or string A, J, Q, K
 }
 
 export interface Deck {
@@ -11,11 +37,12 @@ export interface Deck {
 
 export function generateDeck(): Deck {
   const cards: Card[] = [];
-  const suits: ('S' | 'H' | 'C' | 'D')[] = ['S', 'H', 'C', 'D'];
+  const suits: Suite[] = ['S', 'H', 'C', 'D'];
+  const values: CardValue[] = [3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A', 2];
 
   for (let s: number = 0; s < 4; s++) {
-    for (let v: number = 1; v < 14; v++) {
-      cards.push({ suit: suits[s], value: v });
+    for (let v: number = 0; v < 13; v++) {
+      cards.push({ suit: suits[s], value: values[v] });
     }
   }
 
@@ -47,10 +74,31 @@ export function shuffleDeck(deck: Deck): Deck {
   return { cards: shuffle(deck.cards) };
 }
 
-// Warning: This function will modify the underlying deck in place! Be warned if using react state and make sure to make a clone of the
-// array and then set a new state after
-export function generateHand(numCards: number, deck: Deck): Card[] {
-  const hand: Card[] = deck.cards.splice(0, numCards);
+export function generateHands(numHands: number, deck: Deck): Card[][] {
+  const hands: Card[][] = [];
+
+  let player = 0;
+  for (let i = 0; i < 52; i++) {
+    if (!hands[player]) hands[player] = [];
+    hands[player].push(deck.cards[i]);
+    player = (player + 1) % numHands;
+  }
+
+  for (let h = 0; h < numHands; h++) {
+    sortHand(hands[h]);
+  }
+
+  return hands;
+}
+
+export function sortHand(hand: Card[]): Card[] {
+  hand.sort((a: Card, b: Card) => {
+    if (a.value === b.value) {
+      return suitOrdinal[a.suit] - suitOrdinal[b.suit];
+    } else {
+      return cardOrdinal[a.value] - cardOrdinal[b.value];
+    }
+  });
 
   return hand;
 }
@@ -76,21 +124,6 @@ export function generateCardInfo(card: Card, vertical: boolean, reverse: boolean
       suit = '♠';
       break;
   }
-  let value: string | number = card.value;
-  switch (value) {
-    case 10:
-      value = 'J';
-      break;
-    case 11:
-      value = 'Q';
-      break;
-    case 12:
-      value = 'K';
-      break;
-    case 13:
-      value = 'A';
-      break;
-  }
 
   return (
     <div
@@ -100,9 +133,10 @@ export function generateCardInfo(card: Card, vertical: boolean, reverse: boolean
         flexDirection: vertical ? (reverse ? 'column-reverse' : 'column') : reverse ? 'row-reverse' : 'row',
         ...style,
       }}
+      key={suit + card.value}
     >
       <div>{suit}</div>
-      <div>{value}</div>
+      <div>{card.value}</div>
     </div>
   );
 }
