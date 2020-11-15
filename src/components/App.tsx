@@ -49,21 +49,28 @@ class App extends React.Component<{}, GameState> {
     };
   }
 
+  playCard(card?: Card) {
+    const hands = [...this.state.hands];
+    const playedCards = [...this.state.playedCards];
+    const turn = this.state.turn;
+
+    if (card) {
+      hands[turn] = hands[turn].filter((value: Card) => value !== card);
+      playedCards.push(card);
+    }
+
+    setTimeout(
+      () => {
+        this.setState({ hands, playedCards, turn: (turn + 1) % this.state.numPlayers });
+      },
+      turn === this.state.currentPlayer ? 0 : 1500
+    );
+  }
+
   componentDidUpdate() {
     if (this.state.turn !== this.state.currentPlayer) {
-      const hands = [...this.state.hands];
-      const playedCards = [...this.state.playedCards];
-      const turn = this.state.turn;
-
-      if (hands[turn].length > 0) {
-        // TODO: Make me smart
-        const played = hands[turn].splice(0, 1);
-        playedCards.push(played[0]);
-      }
-
-      setTimeout(() => {
-        this.setState({ hands, playedCards, turn: (this.state.turn + 1) % this.state.numPlayers });
-      }, 2000);
+      const hand = this.state.hands[this.state.turn];
+      this.playCard(hand[0]);
     }
   }
 
@@ -81,16 +88,7 @@ class App extends React.Component<{}, GameState> {
           player={this.state.currentPlayer}
           turn={this.state.turn}
           hand={this.state.hands[this.state.currentPlayer]}
-          playCard={(card: Card) => {
-            // Make a duplicate copy of the hands, then filter out from the current player hand
-            const hands = [...this.state.hands];
-            const playedCards = [...this.state.playedCards];
-
-            hands[this.state.currentPlayer] = hands[this.state.currentPlayer].filter((value: Card) => value !== card);
-            playedCards.push(card);
-
-            this.setState({ hands, playedCards, turn: (this.state.turn + 1) % this.state.numPlayers });
-          }}
+          playCard={(card: Card) => this.playCard(card)}
         />
       </div>
     );
