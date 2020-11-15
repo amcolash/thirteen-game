@@ -53,7 +53,7 @@ class App extends React.Component<{}, GameState> {
         <DebugDeck hands={this.state.hands} />
 
         <h2>Played Cards</h2>
-        <div style={{ display: 'flex' }}>
+        <div style={{ display: 'flex', maxWidth: '90vw', flexWrap: 'wrap' }}>
           {this.state.playedCards.map((card: Card) => generateCardInfo(card, false, false, { padding: 4 }))}
         </div>
 
@@ -63,9 +63,22 @@ class App extends React.Component<{}, GameState> {
           playCard={(card: Card) => {
             // Make a duplicate copy of the hands, then filter out from the current player hand
             const hands = [...this.state.hands];
-            hands[this.state.currentPlayer] = hands[this.state.currentPlayer].filter((value: Card) => value !== card);
+            const playedCards = [...this.state.playedCards];
 
-            this.setState({ hands, playedCards: [...this.state.playedCards, card] });
+            hands[this.state.currentPlayer] = hands[this.state.currentPlayer].filter((value: Card) => value !== card);
+            playedCards.push(card);
+
+            // TODO: Move computer logic out of here
+            for (let i = 0; i < this.state.numPlayers; i++) {
+              if (i !== this.state.currentPlayer) {
+                if (hands[i].length > 0) {
+                  const played = hands[i].splice(0, 1);
+                  playedCards.push(played[0]);
+                }
+              }
+            }
+
+            this.setState({ hands, playedCards });
           }}
         />
       </div>
