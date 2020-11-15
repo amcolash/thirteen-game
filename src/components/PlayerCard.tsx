@@ -46,7 +46,7 @@ interface PlayerCardProps {
 
 export default function PlayerCard(props: PlayerCardProps) {
   return (
-    <Draggable>
+    <Draggable onStop={() => props.playCard(props.card)} key={props.card.suit + props.card.value}>
       {/*Draggable does not play nice with pre-styled transforms - thinking emoji...*/}
       <div
         className={cardStlying}
@@ -54,7 +54,6 @@ export default function PlayerCard(props: PlayerCardProps) {
           marginLeft: props.index === 0 ? 8 : undefined,
           // transform: `rotate(${lerp(-20, 20, props.index / 13)}deg) translateY(${lerpMulti(props.index / 13, [0, -20, -30, -20, 0]) + 10}px)`,
         }}
-        onClick={() => props.playCard(props.card)}
       >
         <div style={{ position: 'absolute', top: size / 3, left: size / 3 }}>{generateCardInfo(props.card, true, true)}</div>
         <div style={{ position: 'absolute', bottom: size / 3, right: size / 3 }}>{generateCardInfo(props.card, true, false)}</div>

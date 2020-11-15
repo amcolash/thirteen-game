@@ -1,6 +1,6 @@
 import React from 'react';
 import { style } from 'typestyle';
-import { Card, Deck, generateDeck, generateHands, shuffleDeck } from '../util/generate';
+import { Card, Deck, generateCardInfo, generateDeck, generateHands, shuffleDeck } from '../util/generate';
 import DebugDeck from './DeckDebug';
 import PlayerHand from './PlayerHand';
 
@@ -52,11 +52,20 @@ class App extends React.Component<{}, GameState> {
       <div className={appStyle}>
         <DebugDeck hands={this.state.hands} />
 
+        <h2>Played Cards</h2>
+        <div style={{ display: 'flex' }}>
+          {this.state.playedCards.map((card: Card) => generateCardInfo(card, false, false, { padding: 4 }))}
+        </div>
+
         <PlayerHand
           player={this.state.currentPlayer}
           hand={this.state.hands[this.state.currentPlayer]}
           playCard={(card: Card) => {
-            console.log(card);
+            // Make a duplicate copy of the hands, then filter out from the current player hand
+            const hands = [...this.state.hands];
+            hands[this.state.currentPlayer] = hands[this.state.currentPlayer].filter((value: Card) => value !== card);
+
+            this.setState({ hands, playedCards: [...this.state.playedCards, card] });
           }}
         />
       </div>
