@@ -28,8 +28,10 @@ interface GameState {
   numPlayers: number;
   playedCards: Card[];
   lastCard?: Card;
+  lastPlayer?: number;
   currentPlayer: number; // the player to show deck for
   turn: number; // player making their move
+  skipped: boolean[];
 }
 
 class App extends React.Component<{}, GameState> {
@@ -48,24 +50,38 @@ class App extends React.Component<{}, GameState> {
       playedCards: [],
       currentPlayer,
       turn: 0,
+      skipped: new Array(numPlayers).fill(false),
     };
   }
 
   playCard(card?: Card) {
     const hands = [...this.state.hands];
     const playedCards = [...this.state.playedCards];
+    const skipped = [...this.state.skipped];
     const turn = this.state.turn;
 
     if (card) {
       hands[turn] = hands[turn].filter((value: Card) => value !== card);
       playedCards.push(card);
+
+      console.log(`Player ${turn + 1} played`, card);
+    } else {
+      skipped[this.state.turn] = true;
+      if (hands[turn].length > 0) console.log(`Player ${turn + 1} skipped`);
     }
 
     setTimeout(
       () => {
-        this.setState({ hands, playedCards, lastCard: card || this.state.lastCard, turn: (turn + 1) % this.state.numPlayers });
+        this.setState({
+          hands,
+          playedCards,
+          skipped,
+          lastCard: card || this.state.lastCard,
+          lastPlayer: card ? turn : this.state.lastPlayer,
+          turn: (turn + 1) % this.state.numPlayers,
+        });
       },
-      turn === this.state.currentPlayer || hands[turn].length === 0 ? 0 : 500
+      turn === this.state.currentPlayer || card === undefined ? 0 : 100
     );
   }
 
@@ -82,16 +98,44 @@ class App extends React.Component<{}, GameState> {
   }
 
   componentDidUpdate() {
-    if (this.state.turn !== this.state.currentPlayer) {
-      this.playCard(this.chooseCard(this.state.hands[this.state.turn], this.state.lastCard));
-    } else {
-      const sorted = sortHand(this.state.hands[this.state.currentPlayer]);
-      let lost: boolean = true;
+    let cardsLeft = 0;
+    this.state.hands.forEach((hand: Card[]) => {
+      hand.forEach((c: Card) => cardsLeft++);
+    });
+
+    if (cardsLeft === 0) return;
+
+    if (this.state.turn !== this.state.currentPlayer && !this.state.skipped[this.state.turn]) {
+      const chosen = this.chooseCard(this.state.hands[this.state.turn], this.state.lastCard);
+      this.playCard(chosen);
+    } else if (!this.state.skipped[this.state.currentPlayer]) {
+      const hand = this.state.hands[this.state.currentPlayer];
+      const sorted = sortHand(hand);
+      let skip: boolean = true;
       for (let i = 0; i < sorted.length; i++) {
         const card = sorted[i];
-        if (cardWins(card, this.state.lastCard)) lost = false;
+        if (cardWins(card, this.state.lastCard)) skip = false;
       }
-      if (lost) this.setState({ lastCard: undefined, turn: (this.state.turn + 1) % this.state.numPlayers, playedCards: [] });
+
+      if (skip) {
+        if (hand.length > 0) console.log(`Player ${this.state.currentPlayer + 1} skipped`);
+
+        const skipped = [...this.state.skipped];
+        skipped[this.state.currentPlayer] = true;
+        this.setState({ skipped, turn: (this.state.turn + 1) % this.state.numPlayers });
+      }
+    } else {
+      console.log(`Round Over: Player ${this.state.lastPlayer! + 1} was last and wins`);
+      console.log('--------------------------------------------------------------------');
+
+      // Only end game when neither computer nor player can play more
+      this.setState({
+        lastCard: undefined,
+        playedCards: [],
+        turn: this.state.lastPlayer || this.state.currentPlayer,
+        lastPlayer: undefined,
+        skipped: new Array(this.state.numPlayers).fill(false),
+      });
     }
   }
 
