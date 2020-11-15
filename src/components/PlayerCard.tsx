@@ -47,13 +47,19 @@ function lerpMulti(amt: number, values: number[]) {
 interface PlayerCardProps {
   card: Card;
   index: number;
-  enabled: boolean;
-  playCard: (card: Card) => void;
+  enabled?: boolean;
+  playCard?: (card: Card) => void;
 }
 
 export default function PlayerCard(props: PlayerCardProps) {
   return (
-    <Draggable disabled={!props.enabled} onStop={() => props.playCard(props.card)} key={props.card.suit + props.card.value}>
+    <Draggable
+      disabled={!props.enabled}
+      onStop={() => {
+        if (props.playCard) props.playCard(props.card);
+      }}
+      key={props.card.suit + props.card.value}
+    >
       {/*Draggable does not play nice with pre-styled transforms - thinking emoji...*/}
       <div
         className={cardStlying + (props.enabled ? ' enabled' : '')}

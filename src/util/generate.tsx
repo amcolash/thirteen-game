@@ -103,6 +103,16 @@ export function sortHand(hand: Card[]): Card[] {
   return hand;
 }
 
+export function cardWins(a: Card, b?: Card): boolean {
+  if (b === undefined) return true;
+
+  if (a.value === b.value) {
+    return suitOrdinal[a.suit] > suitOrdinal[b.suit];
+  } else {
+    return cardOrdinal[a.value] > cardOrdinal[b.value];
+  }
+}
+
 export function generateCardInfo(card: Card, vertical: boolean, reverse: boolean, style?: CSSProperties): React.ReactNode {
   let suit;
   let color;
