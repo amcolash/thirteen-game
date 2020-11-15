@@ -15,15 +15,21 @@ const cardStlying = style({
   position: 'relative',
 
   padding: 10,
-  background: '#eee',
+  background: '#ccc',
   border: '2px solid #bbb',
   textShadow: 'none',
   textAlign: 'center',
 
   transition: 'margin 0.25s',
   $nest: {
-    '&:hover': {
-      marginTop: -size * 1.25,
+    '&.enabled': {
+      background: '#eee',
+
+      $nest: {
+        '&:hover': {
+          marginTop: -size * 1.25,
+        },
+      },
     },
   },
 });
@@ -41,15 +47,16 @@ function lerpMulti(amt: number, values: number[]) {
 interface PlayerCardProps {
   card: Card;
   index: number;
+  enabled: boolean;
   playCard: (card: Card) => void;
 }
 
 export default function PlayerCard(props: PlayerCardProps) {
   return (
-    <Draggable onStop={() => props.playCard(props.card)} key={props.card.suit + props.card.value}>
+    <Draggable disabled={!props.enabled} onStop={() => props.playCard(props.card)} key={props.card.suit + props.card.value}>
       {/*Draggable does not play nice with pre-styled transforms - thinking emoji...*/}
       <div
-        className={cardStlying}
+        className={cardStlying + (props.enabled ? ' enabled' : '')}
         style={{
           marginLeft: props.index === 0 ? 8 : undefined,
           // transform: `rotate(${lerp(-20, 20, props.index / 13)}deg) translateY(${lerpMulti(props.index / 13, [0, -20, -30, -20, 0]) + 10}px)`,

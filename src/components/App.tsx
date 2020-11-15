@@ -26,7 +26,8 @@ interface GameState {
   hands: Card[][];
   numPlayers: number;
   playedCards: Card[];
-  currentPlayer: number;
+  currentPlayer: number; // the player to show deck for
+  turn: number; // player making their move
 }
 
 class App extends React.Component<{}, GameState> {
@@ -44,13 +45,32 @@ class App extends React.Component<{}, GameState> {
       numPlayers,
       playedCards: [],
       currentPlayer,
+      turn: 0,
     };
+  }
+
+  componentDidUpdate() {
+    if (this.state.turn !== this.state.currentPlayer) {
+      const hands = [...this.state.hands];
+      const playedCards = [...this.state.playedCards];
+      const turn = this.state.turn;
+
+      if (hands[turn].length > 0) {
+        // TODO: Make me smart
+        const played = hands[turn].splice(0, 1);
+        playedCards.push(played[0]);
+      }
+
+      setTimeout(() => {
+        this.setState({ hands, playedCards, turn: (this.state.turn + 1) % this.state.numPlayers });
+      }, 2000);
+    }
   }
 
   render(): React.ReactNode {
     return (
       <div className={appStyle}>
-        <DebugDeck hands={this.state.hands} />
+        <DebugDeck hands={this.state.hands} turn={this.state.turn} />
 
         <h2>Played Cards</h2>
         <div style={{ display: 'flex', maxWidth: '90vw', flexWrap: 'wrap' }}>
@@ -59,6 +79,7 @@ class App extends React.Component<{}, GameState> {
 
         <PlayerHand
           player={this.state.currentPlayer}
+          turn={this.state.turn}
           hand={this.state.hands[this.state.currentPlayer]}
           playCard={(card: Card) => {
             // Make a duplicate copy of the hands, then filter out from the current player hand
@@ -68,17 +89,7 @@ class App extends React.Component<{}, GameState> {
             hands[this.state.currentPlayer] = hands[this.state.currentPlayer].filter((value: Card) => value !== card);
             playedCards.push(card);
 
-            // TODO: Move computer logic out of here
-            for (let i = 0; i < this.state.numPlayers; i++) {
-              if (i !== this.state.currentPlayer) {
-                if (hands[i].length > 0) {
-                  const played = hands[i].splice(0, 1);
-                  playedCards.push(played[0]);
-                }
-              }
-            }
-
-            this.setState({ hands, playedCards });
+            this.setState({ hands, playedCards, turn: (this.state.turn + 1) % this.state.numPlayers });
           }}
         />
       </div>

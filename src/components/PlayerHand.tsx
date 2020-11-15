@@ -15,6 +15,7 @@ const handStlying = style({
 interface PlayerHandProps {
   hand: Card[];
   player: number;
+  turn: number;
   playCard: (card: Card) => void;
 }
 
@@ -24,7 +25,7 @@ export default function PlayerHand(props: PlayerHandProps) {
       <h2>Player {props.player + 1} Hand</h2>
       <div className={handStlying}>
         {props.hand.map((card: Card, index) => (
-          <PlayerCard card={card} index={index} key={index} playCard={props.playCard} />
+          <PlayerCard card={card} index={index} key={index} enabled={props.player === props.turn} playCard={props.playCard} />
         ))}
       </div>
     </div>
