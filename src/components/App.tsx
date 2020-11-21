@@ -1,4 +1,6 @@
 import React from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { style } from 'typestyle';
 import { Card, cardWins, Deck, generateCardInfo, generateDeck, generateHands, shuffleDeck, sortHand } from '../util/generate';
 import DebugDeck from './DeckDebug';
@@ -81,7 +83,7 @@ class App extends React.Component<{}, GameState> {
           turn: (turn + 1) % this.state.numPlayers,
         });
       },
-      turn === this.state.currentPlayer || card === undefined ? 0 : 600
+      turn === this.state.currentPlayer || card === undefined ? 0 : 1500
     );
   }
 
@@ -104,6 +106,7 @@ class App extends React.Component<{}, GameState> {
     });
 
     if (cardsLeft === 0) return;
+    if (this.state.turn === -1) return;
 
     if (this.state.turn !== this.state.currentPlayer && !this.state.skipped[this.state.turn]) {
       const chosen = this.chooseCard(this.state.hands[this.state.turn], this.state.lastCard);
@@ -125,17 +128,26 @@ class App extends React.Component<{}, GameState> {
         this.setState({ skipped, turn: (this.state.turn + 1) % this.state.numPlayers });
       }
     } else {
-      console.log(`Round Over: Player ${this.state.lastPlayer! + 1} was last and wins`);
+      const delay = 5000;
+
+      toast.info(`Round Over! Player ${this.state.lastPlayer! + 1} wins`, { autoClose: delay });
+      console.log(`Round Over! Player ${this.state.lastPlayer! + 1} wins`);
       console.log('--------------------------------------------------------------------');
+
+      const turn = this.state.lastPlayer || this.state.currentPlayer;
 
       // Only end game when neither computer nor player can play more
       this.setState({
         lastCard: undefined,
         playedCards: [],
-        turn: this.state.lastPlayer || this.state.currentPlayer,
+        turn: -1,
         lastPlayer: undefined,
         skipped: new Array(this.state.numPlayers).fill(false),
       });
+
+      setTimeout(() => {
+        this.setState({ turn });
+      }, delay);
     }
   }
 
@@ -157,6 +169,7 @@ class App extends React.Component<{}, GameState> {
           hand={this.state.hands[this.state.currentPlayer]}
           playCard={(card: Card) => this.playCard(card)}
         />
+        <ToastContainer hideProgressBar />
       </div>
     );
   }

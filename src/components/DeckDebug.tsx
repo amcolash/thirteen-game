@@ -12,7 +12,7 @@ const currentStyle = style({ fontWeight: 'bold', color: 'red', fontSize: 14 });
 export default function DeckDebug(props: DebugDeckProps) {
   return (
     <React.Fragment>
-      <h2>Player {props.turn + 1} Turn</h2>
+      <h2>{props.turn === -1 ? 'Round Over' : `Player ${props.turn + 1} Turn`}</h2>
       <div style={{ display: 'flex', borderRadius: 10, background: 'rgba(255,255,255,0.35)' }}>
         {props.hands.map((hand, index) => {
           return (

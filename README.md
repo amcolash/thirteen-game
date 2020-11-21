@@ -1,4 +1,10 @@
-# Getting Started with Create React App
+# thirteen-game
+
+Web version of the card game "Thirteen" or "Tiến lên".
+
+Check it out [here](https://thirteen-game-992c9.web.app/)
+
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
