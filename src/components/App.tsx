@@ -60,7 +60,7 @@ class App extends React.Component<{}, GameState> {
     const skipped = [...this.state.skipped];
     const turn = this.state.turn;
 
-    if (card) {
+    if (card && hands[turn].indexOf(card) !== -1) {
       hands[turn] = hands[turn].filter((value: Card) => value !== card);
       playedCards.push(card);
 
@@ -81,7 +81,7 @@ class App extends React.Component<{}, GameState> {
           turn: (turn + 1) % this.state.numPlayers,
         });
       },
-      turn === this.state.currentPlayer || card === undefined ? 0 : 100
+      turn === this.state.currentPlayer || card === undefined ? 0 : 600
     );
   }
 

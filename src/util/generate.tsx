@@ -84,8 +84,6 @@ export function generateHands(numHands: number, deck: Deck): Card[][] {
     player = (player + 1) % numHands;
   }
 
-  hands[0] = [hands[0][0]];
-
   for (let h = 0; h < numHands; h++) {
     sortHand(hands[h]);
   }

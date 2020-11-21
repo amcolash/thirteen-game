@@ -34,15 +34,15 @@ const cardStlying = style({
   },
 });
 
-function lerp(v0: number, v1: number, t: number) {
-  return v0 * (1 - t) + v1 * t;
-}
+// function lerp(v0: number, v1: number, t: number) {
+//   return v0 * (1 - t) + v1 * t;
+// }
 
-function lerpMulti(amt: number, values: number[]) {
-  if (values.length === 1) return values[0];
-  const cunit = 1.0 / (values.length - 1);
-  return lerp(values[Math.floor(amt / cunit)], values[Math.ceil(amt / cunit)], (amt % cunit) / cunit);
-}
+// function lerpMulti(amt: number, values: number[]) {
+//   if (values.length === 1) return values[0];
+//   const cunit = 1.0 / (values.length - 1);
+//   return lerp(values[Math.floor(amt / cunit)], values[Math.ceil(amt / cunit)], (amt % cunit) / cunit);
+// }
 
 interface PlayerCardProps {
   card: Card;
