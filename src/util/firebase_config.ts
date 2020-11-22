@@ -1,6 +1,4 @@
-import firebase from 'firebase/app';
-
-const config = {
+export const config = {
   apiKey: 'AIzaSyDCNEGO6tsJiup5ypwAD4Bnj4SVoXL1IZQ',
   authDomain: 'thirteen-game-992c9.firebaseapp.com',
   databaseURL: 'https://thirteen-game-992c9.firebaseio.com',
@@ -10,7 +8,3 @@ const config = {
   appId: '1:1048437971926:web:9c7c956a8485439e522277',
   measurementId: 'G-YBF7KMWPBY',
 };
-
-const app = firebase.initializeApp(config);
-
-export default app;

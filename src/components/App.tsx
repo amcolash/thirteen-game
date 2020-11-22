@@ -1,8 +1,8 @@
+import { FirebaseAuthConsumer } from '@react-firebase/auth';
 import React from 'react';
 import { style } from 'typestyle';
 
-import { FirebaseContext } from './FirebaseProvider';
-import Game from './Game';
+import Rooms from './Rooms';
 import SignIn from './SignIn';
 
 const appStyle = style({
@@ -25,9 +25,9 @@ const appStyle = style({
 export default class App extends React.Component {
   render() {
     return (
-      <FirebaseContext.Consumer>
-        {({ isUserSignedIn }) => <div className={appStyle}>{isUserSignedIn ? <Game /> : <SignIn />}</div>}
-      </FirebaseContext.Consumer>
+      <FirebaseAuthConsumer>
+        {({ isSignedIn }) => <div className={appStyle}>{isSignedIn ? <Rooms /> : <SignIn />}</div>}
+      </FirebaseAuthConsumer>
     );
   }
 }

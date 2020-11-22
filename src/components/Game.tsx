@@ -1,10 +1,11 @@
+import firebase from 'firebase/app';
 import React from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { style } from 'typestyle';
+
 import { Card, cardWins, Deck, generateCardInfo, generateDeck, generateHands, shuffleDeck, sortHand } from '../util/generate';
 import DebugDeck from './DeckDebug';
-import { FirebaseContext } from './FirebaseProvider';
 import PlayerCard from './PlayerCard';
 import PlayerHand from './PlayerHand';
 
@@ -144,31 +145,27 @@ class Game extends React.Component<{}, GameState> {
 
   render(): React.ReactNode {
     return (
-      <FirebaseContext.Consumer>
-        {({ Firebase }) => (
-          <div className={appStyle}>
-            <DebugDeck hands={this.state.hands} turn={this.state.turn} />
+      <div className={appStyle}>
+        <DebugDeck hands={this.state.hands} turn={this.state.turn} />
 
-            <h2>Played Cards</h2>
-            {this.state.lastCard && <PlayerCard card={this.state.lastCard} index={0} />}
-            <div style={{ display: 'flex', maxWidth: '90vw', flexWrap: 'wrap' }}>
-              {this.state.playedCards.map((card: Card) => generateCardInfo(card, false, false, { padding: 4 }))}
-            </div>
+        <h2>Played Cards</h2>
+        {this.state.lastCard && <PlayerCard card={this.state.lastCard} index={0} />}
+        <div style={{ display: 'flex', maxWidth: '90vw', flexWrap: 'wrap' }}>
+          {this.state.playedCards.map((card: Card) => generateCardInfo(card, false, false, { padding: 4 }))}
+        </div>
 
-            <PlayerHand
-              player={this.state.currentPlayer}
-              turn={this.state.turn}
-              lastCard={this.state.lastCard}
-              hand={this.state.hands[this.state.currentPlayer]}
-              playCard={(card: Card) => this.playCard(card)}
-            />
-            <ToastContainer hideProgressBar />
-            <button style={{ position: 'absolute', top: 20, right: 20 }} onClick={() => Firebase.auth().signOut()}>
-              Sign Out
-            </button>
-          </div>
-        )}
-      </FirebaseContext.Consumer>
+        <PlayerHand
+          player={this.state.currentPlayer}
+          turn={this.state.turn}
+          lastCard={this.state.lastCard}
+          hand={this.state.hands[this.state.currentPlayer]}
+          playCard={(card: Card) => this.playCard(card)}
+        />
+        <ToastContainer hideProgressBar />
+        <button style={{ position: 'absolute', top: 20, right: 20 }} onClick={() => firebase.auth().signOut()}>
+          Sign Out
+        </button>
+      </div>
     );
   }
 }
