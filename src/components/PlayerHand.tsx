@@ -1,6 +1,7 @@
 import React from 'react';
 import { style } from 'typestyle';
-import { Card, cardWins } from '../util/generate';
+import { Card } from '../util/data';
+import { cardWins } from '../util/generate';
 import PlayerCard from './PlayerCard';
 
 const handStlying = style({
@@ -20,7 +21,7 @@ interface PlayerHandProps {
   playCard: (card: Card) => void;
 }
 
-export default function PlayerHand(props: PlayerHandProps) {
+const PlayerHand = (props: PlayerHandProps) => {
   return (
     <div style={{ paddingTop: 20, textAlign: 'center' }}>
       <h2>Player {props.player + 1} Hand</h2>
@@ -37,4 +38,6 @@ export default function PlayerHand(props: PlayerHandProps) {
       </div>
     </div>
   );
-}
+};
+
+export default PlayerHand;

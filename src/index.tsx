@@ -1,13 +1,11 @@
-import firebase from 'firebase/app';
 import 'firebase/auth';
-import { FirebaseAuthProvider } from '@react-firebase/auth';
-import { FirebaseDatabaseProvider } from '@react-firebase/database';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { cssRule } from 'typestyle';
 
 import App from './components/App';
 import { config } from './util/firebase_config';
+import { FirebaseAppProvider } from 'reactfire/firebaseApp';
 
 cssRule('body', {
   margin: 0,
@@ -15,11 +13,9 @@ cssRule('body', {
 
 ReactDOM.render(
   <React.StrictMode>
-    <FirebaseAuthProvider firebase={firebase} {...config}>
-      <FirebaseDatabaseProvider firebase={firebase} {...config}>
-        <App />
-      </FirebaseDatabaseProvider>
-    </FirebaseAuthProvider>
+    <FirebaseAppProvider firebaseConfig={config}>
+      <App />
+    </FirebaseAppProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

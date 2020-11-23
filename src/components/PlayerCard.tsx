@@ -2,7 +2,8 @@ import React from 'react';
 import Draggable from 'react-draggable';
 
 import { style } from 'typestyle';
-import { Card, generateCardInfo } from '../util/generate';
+import { Card } from '../util/data';
+import { generateCardInfo } from '../util/generate';
 
 const size = 30;
 
@@ -51,7 +52,7 @@ interface PlayerCardProps {
   playCard?: (card: Card) => void;
 }
 
-export default function PlayerCard(props: PlayerCardProps) {
+const PlayerCard = (props: PlayerCardProps) => {
   return (
     <Draggable
       disabled={!props.enabled}
@@ -73,4 +74,6 @@ export default function PlayerCard(props: PlayerCardProps) {
       </div>
     </Draggable>
   );
-}
+};
+
+export default PlayerCard;

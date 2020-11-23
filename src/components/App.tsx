@@ -1,5 +1,5 @@
-import { FirebaseAuthConsumer } from '@react-firebase/auth';
-import React from 'react';
+import React, { Suspense } from 'react';
+import { AuthCheck } from 'reactfire/auth';
 import { style } from 'typestyle';
 
 import Rooms from './Rooms';
@@ -22,12 +22,16 @@ const appStyle = style({
   justifyContent: 'center',
 });
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <FirebaseAuthConsumer>
-        {({ isSignedIn }) => <div className={appStyle}>{isSignedIn ? <Rooms /> : <SignIn />}</div>}
-      </FirebaseAuthConsumer>
-    );
-  }
-}
+const App = () => {
+  return (
+    <div className={appStyle}>
+      <Suspense fallback={<h1>Signing In</h1>}>
+        <AuthCheck fallback={<SignIn />}>
+          <Rooms />
+        </AuthCheck>
+      </Suspense>
+    </div>
+  );
+};
+
+export default App;

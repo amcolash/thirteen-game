@@ -3,12 +3,12 @@ import React from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { style } from 'typestyle';
+import { Card, Deck, Room } from '../util/data';
 
-import { Card, cardWins, Deck, generateCardInfo, generateDeck, generateHands, shuffleDeck, sortHand } from '../util/generate';
+import { cardWins, generateCardInfo, generateDeck, generateHands, shuffleDeck, sortHand } from '../util/generate';
 import DebugDeck from './DeckDebug';
 import PlayerCard from './PlayerCard';
 import PlayerHand from './PlayerHand';
-import { Room } from './Rooms';
 
 const appStyle = style({
   display: 'flex',
@@ -19,7 +19,7 @@ const appStyle = style({
 
 interface GameProps {
   currentRoom: string;
-  leaveRoom: (newRoom?: Room) => void;
+  leaveRoom: () => void;
 }
 
 interface GameState {
@@ -34,7 +34,7 @@ interface GameState {
   skipped: boolean[];
 }
 
-class Game extends React.Component<GameProps, GameState> {
+export default class Game extends React.Component<GameProps, GameState> {
   constructor(props: GameProps) {
     super(props);
 
@@ -188,5 +188,3 @@ class Game extends React.Component<GameProps, GameState> {
     );
   }
 }
-
-export default Game;

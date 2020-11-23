@@ -1,6 +1,7 @@
 import React from 'react';
 import { style } from 'typestyle';
-import { Card, generateCardInfo } from '../util/generate';
+import { Card } from '../util/data';
+import { generateCardInfo } from '../util/generate';
 
 interface DebugDeckProps {
   hands: Card[][];
@@ -9,7 +10,7 @@ interface DebugDeckProps {
 
 const currentStyle = style({ fontWeight: 'bold', color: 'red', fontSize: 14 });
 
-export default function DeckDebug(props: DebugDeckProps) {
+const DeckDebug = (props: DebugDeckProps) => {
   return (
     <React.Fragment>
       <h2>{props.turn === -1 ? 'Round Over' : `Player ${props.turn + 1} Turn`}</h2>
@@ -27,4 +28,6 @@ export default function DeckDebug(props: DebugDeckProps) {
       </div>
     </React.Fragment>
   );
-}
+};
+
+export default DeckDebug;
