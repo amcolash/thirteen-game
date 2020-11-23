@@ -8,6 +8,7 @@ import { Card, cardWins, Deck, generateCardInfo, generateDeck, generateHands, sh
 import DebugDeck from './DeckDebug';
 import PlayerCard from './PlayerCard';
 import PlayerHand from './PlayerHand';
+import { Room } from './Rooms';
 
 const appStyle = style({
   display: 'flex',
@@ -15,6 +16,11 @@ const appStyle = style({
   alignItems: 'center',
   justifyContent: 'center',
 });
+
+interface GameProps {
+  currentRoom: string;
+  leaveRoom: (newRoom?: Room) => void;
+}
 
 interface GameState {
   deck: Deck;
@@ -28,8 +34,8 @@ interface GameState {
   skipped: boolean[];
 }
 
-class Game extends React.Component<{}, GameState> {
-  constructor(props: {}) {
+class Game extends React.Component<GameProps, GameState> {
+  constructor(props: GameProps) {
     super(props);
 
     const numPlayers = 4;
@@ -46,6 +52,13 @@ class Game extends React.Component<{}, GameState> {
       turn: 0,
       skipped: new Array(numPlayers).fill(false),
     };
+  }
+
+  componentDidMount() {
+    window.addEventListener('beforeunload', (e) => {
+      e.preventDefault();
+      this.props.leaveRoom();
+    });
   }
 
   playCard(card?: Card) {
@@ -162,9 +175,15 @@ class Game extends React.Component<{}, GameState> {
           playCard={(card: Card) => this.playCard(card)}
         />
         <ToastContainer hideProgressBar />
-        <button style={{ position: 'absolute', top: 20, right: 20 }} onClick={() => firebase.auth().signOut()}>
-          Sign Out
-        </button>
+        <div style={{ position: 'absolute', top: 20, right: 20, display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+          <div>Current Room: {this.props.currentRoom}</div>
+          <div>
+            <button onClick={() => this.props.leaveRoom()}>Leave Room</button>
+          </div>
+          <div>
+            <button onClick={() => firebase.auth().signOut()}>Sign Out</button>
+          </div>
+        </div>
       </div>
     );
   }
