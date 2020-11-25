@@ -20,8 +20,12 @@ const RoomList = (props: RoomListProps) => {
           ) : (
             Object.values(props.rooms).map((room: Room) => (
               <div key={room.id} style={{ display: 'flex', alignItems: 'center', margin: '5px 0' }}>
-                <div>{room.name}</div>
-                <button onClick={() => props.changeRoom(room)}>Join</button>
+                <div>
+                  {room.name}, Players: ({room.members.length} / 4)
+                </div>
+                <button onClick={() => props.changeRoom(room)} disabled={room.members.length > 3}>
+                  Join
+                </button>
               </div>
             ))
           )}

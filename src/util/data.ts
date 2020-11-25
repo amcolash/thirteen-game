@@ -3,7 +3,6 @@ export const backgroundColor = '#35654d';
 
 export const roomsPath = '/rooms';
 export const usersPath = `/users`;
-export const gamesPath = '/games';
 
 export interface Game {
   deck: Deck;
@@ -22,6 +21,8 @@ export interface Room {
   password: string;
   owner: string;
   members: string[];
+
+  game: Game | null;
 }
 
 export interface User {

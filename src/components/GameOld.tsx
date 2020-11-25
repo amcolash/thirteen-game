@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { style } from 'typestyle';
 import { Card, Deck } from '../util/data';
 
-import { cardWins, generateCardInfo, generateDeck, generateHands, shuffleDeck, sortHand } from '../util/generate';
+import { cardWins, generateCardInfo, sortHand } from '../util/generate';
 import DebugDeck from './DeckDebug';
 import PlayerCard from './PlayerCard';
 import PlayerHand from './PlayerHand';
@@ -38,19 +38,19 @@ export default class GameOld extends React.Component<GameOldProps, GameOldState>
   constructor(props: GameOldProps) {
     super(props);
 
-    const numPlayers = 4;
-    const deck = shuffleDeck(generateDeck());
-    const hands = generateHands(numPlayers, deck);
+    // const numPlayers = 4;
+    // const deck = shuffleDeck(generateDeck());
+    // const hands = generateHands(numPlayers, deck);
 
-    this.state = {
-      deck,
-      hands,
-      numPlayers,
-      playedCards: [],
-      currentPlayer: 0,
-      turn: 0,
-      skipped: new Array(numPlayers).fill(false),
-    };
+    // this.state = {
+    //   deck,
+    //   hands,
+    //   numPlayers,
+    //   playedCards: [],
+    //   currentPlayer: 0,
+    //   turn: 0,
+    //   skipped: new Array(numPlayers).fill(false),
+    // };
   }
 
   componentDidUpdate() {
