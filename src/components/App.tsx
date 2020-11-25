@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import { AuthCheck } from 'reactfire/auth';
-import { style } from 'typestyle';
+import { cssRule, style } from 'typestyle';
 
 import Rooms from './Rooms';
 import SignIn from './SignIn';
@@ -22,10 +22,14 @@ const appStyle = style({
   justifyContent: 'center',
 });
 
+cssRule('button, input', {
+  margin: 5,
+});
+
 const App = () => {
   return (
     <div className={appStyle}>
-      <Suspense fallback={<h1>Signing In</h1>}>
+      <Suspense fallback={<h1>Signing In...</h1>}>
         <AuthCheck fallback={<SignIn />}>
           <Rooms />
         </AuthCheck>

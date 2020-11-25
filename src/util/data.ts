@@ -1,3 +1,6 @@
+export const roomsPath = '/rooms';
+export const usersPath = `/users`;
+
 export interface Room {
   id: string;
   name: string;
