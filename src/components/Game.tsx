@@ -55,11 +55,21 @@ export default class Game extends React.Component<GameProps, GameState> {
   }
 
   componentDidMount() {
-    window.addEventListener('beforeunload', (e) => {
-      e.preventDefault();
-      this.props.leaveRoom();
-    });
+    window.addEventListener('beforeunload', this.leaveOnExit);
   }
+
+  componentWillUnmount() {
+    window.removeEventListener('beforeunload', this.leaveOnExit);
+  }
+
+  componentDidUpdate() {
+    this.handleTurn();
+  }
+
+  leaveOnExit = (e: Event) => {
+    e.preventDefault();
+    this.props.leaveRoom();
+  };
 
   playCard(card?: Card) {
     const hands = [...this.state.hands];
@@ -104,7 +114,7 @@ export default class Game extends React.Component<GameProps, GameState> {
     }
   }
 
-  componentDidUpdate() {
+  handleTurn() {
     let cardsLeft = 0;
     this.state.hands.forEach((hand: Card[]) => {
       hand.forEach((c: Card) => cardsLeft++);
@@ -133,7 +143,7 @@ export default class Game extends React.Component<GameProps, GameState> {
         this.setState({ skipped, turn: (this.state.turn + 1) % this.state.numPlayers });
       }
     } else {
-      const delay = 5000;
+      const delay = 4000;
 
       toast.info(`Round Over! Player ${this.state.lastPlayer! + 1} wins`, { autoClose: delay });
       console.log(`Round Over! Player ${this.state.lastPlayer! + 1} wins`);
@@ -152,7 +162,7 @@ export default class Game extends React.Component<GameProps, GameState> {
 
       setTimeout(() => {
         this.setState({ turn });
-      }, delay);
+      }, delay / 2);
     }
   }
 
@@ -182,6 +192,14 @@ export default class Game extends React.Component<GameProps, GameState> {
           </div>
           <div>
             <button onClick={() => firebase.auth().signOut()}>Sign Out</button>
+          </div>
+          <div>
+            <h3>Cards Left</h3>
+            {this.state.hands.map((h, i) => (
+              <div>
+                Player {i + 1}: {h.length}
+              </div>
+            ))}
           </div>
         </div>
       </div>
