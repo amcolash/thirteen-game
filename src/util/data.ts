@@ -1,5 +1,20 @@
+export const textColor = '#ccc';
+export const backgroundColor = '#35654d';
+
 export const roomsPath = '/rooms';
 export const usersPath = `/users`;
+export const gamesPath = '/games';
+
+export interface Game {
+  deck: Deck;
+  hands: { [user: string]: Card[] };
+  numPlayers: number;
+  playedCards: Card[];
+  lastCard: Card | null;
+  lastPlayer: string | null;
+  turn: string; // player making their move
+  skipped: { [user: string]: boolean };
+}
 
 export interface Room {
   id: string;

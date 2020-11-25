@@ -1,11 +1,11 @@
 import 'firebase/auth';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { FirebaseAppProvider } from 'reactfire/firebaseApp';
 import { cssRule } from 'typestyle';
 
-import App from './components/App';
 import { config } from './util/firebase_config';
-import { FirebaseAppProvider } from 'reactfire/firebaseApp';
+import App from './components/App';
 
 cssRule('body', {
   margin: 0,

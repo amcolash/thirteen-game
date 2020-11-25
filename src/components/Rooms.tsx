@@ -1,8 +1,8 @@
 import React, { Suspense, useEffect } from 'react';
 import { useAuth, useDatabase, useDatabaseListData, useDatabaseObjectData, useUser } from 'reactfire';
 import { v4 as uuidv4 } from 'uuid';
-import { Room, roomsPath, User, usersPath } from '../util/data';
 
+import { Room, roomsPath, User, usersPath } from '../util/data';
 import Game from './Game';
 import RoomList from './RoomList';
 

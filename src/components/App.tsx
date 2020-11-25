@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import { AuthCheck } from 'reactfire/auth';
 import { cssRule, style } from 'typestyle';
+import { backgroundColor, textColor } from '../util/data';
 
 import Rooms from './Rooms';
 import SignIn from './SignIn';
@@ -10,8 +11,8 @@ const appStyle = style({
   height: '100vh',
   overflow: 'hidden',
 
-  background: '#35654d',
-  color: '#ccc',
+  background: backgroundColor,
+  color: textColor,
   textShadow: '1px 1px black',
   fontFamily: 'sans-serif',
   userSelect: 'none',
