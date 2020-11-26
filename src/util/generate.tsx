@@ -1,7 +1,7 @@
 import React, { CSSProperties } from 'react';
-import { Deck, Card, Suite, CardValue, suitOrdinal, cardOrdinal, Game } from './data';
+import { Deck, Card, Suite, CardValue, suitOrdinal, cardOrdinal, Game, User } from './data';
 
-export function generateGame(players: string[], player: string): Game {
+export function generateGame(players: User[], player: string): Game {
   const deck = shuffleDeck(generateDeck());
   const hands = generateHands(players, deck);
 
@@ -56,17 +56,18 @@ export function shuffleDeck(deck: Deck): Deck {
   return { cards: shuffle(deck.cards) };
 }
 
-export function generateHands(players: string[], deck: Deck): { [user: string]: Card[] } {
+export function generateHands(players: User[], deck: Deck): { [user: string]: Card[] } {
   const hands: { [user: string]: Card[] } = {};
+  const playerIds = players.map((p) => p.id);
 
   let player = 0;
   for (let i = 0; i < 52; i++) {
-    if (!hands[players[player]]) hands[players[player]] = [];
-    hands[players[player]].push(deck.cards[i]);
+    if (!hands[playerIds[player]]) hands[playerIds[player]] = [];
+    hands[playerIds[player]].push(deck.cards[i]);
     player = (player + 1) % players.length;
   }
 
-  players.forEach((p) => {
+  playerIds.forEach((p) => {
     sortHand(hands[p]);
   });
 

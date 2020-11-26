@@ -20,7 +20,7 @@ export interface Room {
   name: string;
   password: string;
   owner: string;
-  members: string[];
+  members: User[];
 
   game: Game | null;
 }
@@ -29,6 +29,7 @@ export interface User {
   id: string;
   email: string;
   currentRoom: string;
+  nickname: string;
 }
 
 // Cards

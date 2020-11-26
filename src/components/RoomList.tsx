@@ -5,7 +5,6 @@ import FancyInput from './FancyInput';
 interface RoomListProps {
   rooms: Room[];
   newRoom: (roomName: string) => void;
-  testRoom: () => void;
   changeRoom: (room: Room) => void;
 }
 
@@ -18,22 +17,29 @@ const RoomList = (props: RoomListProps) => {
           {props.rooms.length === 0 ? (
             <div>No Available Rooms</div>
           ) : (
-            Object.values(props.rooms).map((room: Room) => (
-              <div key={room.id} style={{ display: 'flex', alignItems: 'center', margin: '5px 0' }}>
-                <div>
-                  {room.name}, Players: ({room.members.length} / 4)
+            Object.values(props.rooms).map((room: Room) => {
+              const members = room.members ? Object.values(room.members) : [];
+              return (
+                <div key={room.id} style={{ display: 'flex', alignItems: 'center', margin: '5px 0' }}>
+                  <div>
+                    {room.name}, Players: ({members.length} / 4)
+                  </div>
+                  <button onClick={() => props.changeRoom(room)} disabled={members.length > 3}>
+                    Join
+                  </button>
                 </div>
-                <button onClick={() => props.changeRoom(room)} disabled={room.members.length > 3}>
-                  Join
-                </button>
-              </div>
-            ))
+              );
+            })
           )}
         </Suspense>
       </div>
       <div style={{ display: 'flex' }}>
-        <FancyInput placeholder="Room Name" buttonLabel="New Room" onConfirm={(value: string) => props.newRoom(value)} />
-        <button onClick={() => props.testRoom()}>Test Room</button>
+        <FancyInput
+          placeholder="Room Name"
+          buttonLabel="New Room"
+          initialValue="test"
+          onConfirm={(value: string) => props.newRoom(value)}
+        />
       </div>
     </div>
   );
