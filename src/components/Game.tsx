@@ -59,6 +59,7 @@ const Game = (props: GameProps) => {
 
   const members = Object.values(room.members);
   const currentIndex = members.findIndex((u) => u.id === room.game?.turn);
+  const ownerIndex = members.findIndex((u) => u.id === room.owner);
 
   return (
     <div>
@@ -72,6 +73,8 @@ const Game = (props: GameProps) => {
         >
           Deal{members.length < 2 ? ' (Need at least 2 players)' : ''}
         </button>
+      ) : !room.game ? (
+        <div>Waiting for {members[ownerIndex].nickname} to deal</div>
       ) : null}
       {room.game ? (
         <div>

@@ -58,7 +58,7 @@ export function generateHands(players: User[], deck: Deck): { [user: string]: Ca
   const playerIds = players.map((p) => p.id);
 
   let player = 0;
-  for (let i = 0; i < 52; i++) {
+  for (let i = 0; i < players.length * 13; i++) {
     if (!hands[playerIds[player]]) hands[playerIds[player]] = [];
     hands[playerIds[player]].push(deck.cards[i]);
     player = (player + 1) % players.length;

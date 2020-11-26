@@ -1,11 +1,38 @@
 import React, { Suspense, useEffect } from 'react';
+import { Repeat } from 'react-feather';
 import { useAuth, useDatabase, useDatabaseListData, useDatabaseObjectData, useUser } from 'reactfire';
+import { style } from 'typestyle';
 import { uniqueNamesGenerator, Config, adjectives, animals } from 'unique-names-generator';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Room, roomsPath, User, usersPath } from '../util/data';
+import FancyInput from './FancyInput';
 import Game from './Game';
 import RoomList from './RoomList';
+
+const randomNameClass = style({
+  color: '#777',
+  position: 'absolute',
+  right: 12,
+  top: 9,
+  transition: 'all 0.5s',
+  padding: 4,
+  borderRadius: 3,
+
+  $nest: {
+    '&:hover': {
+      background: '#ccc',
+      color: '#555',
+    },
+  },
+});
+
+const customConfig: Config = {
+  dictionaries: [adjectives, animals],
+  separator: ' ',
+  length: 2,
+  style: 'capital',
+};
 
 const newRoom = (name: string, user: User, userRef: firebase.database.Reference, roomsRef: firebase.database.Reference) => {
   if (name.length > 0) {
@@ -40,13 +67,6 @@ const changeRoom = (user: User, userRef: firebase.database.Reference, roomsRef: 
   userRef.update({ currentRoom: newRoom ? newRoom.id : null });
 };
 
-const customConfig: Config = {
-  dictionaries: [adjectives, animals],
-  separator: ' ',
-  length: 2,
-  style: 'capital',
-};
-
 const Rooms = () => {
   const auth = useAuth();
   const currentUser = useUser() as firebase.User;
@@ -72,8 +92,21 @@ const Rooms = () => {
       ) : (
         <div>
           <div style={{ position: 'absolute', top: 20, right: 20 }}>
-            <span>{user.nickname}</span>
-            <button onClick={() => auth.signOut()}>Sign Out</button>
+            <label>Nickname</label>
+            <FancyInput
+              placeholder="Enter a nickname"
+              initialValue={user.nickname}
+              onChange={(value: string) => userRef.update({ nickname: value })}
+            >
+              <Repeat
+                size={20}
+                className={randomNameClass}
+                onClick={() => userRef.update({ nickname: uniqueNamesGenerator(customConfig) })}
+              />
+            </FancyInput>
+            <button style={{ marginLeft: 0 }} onClick={() => auth.signOut()}>
+              Sign Out
+            </button>
           </div>
           <RoomList
             rooms={rooms}
