@@ -19,6 +19,7 @@ export interface Room {
   name: string;
   password: string;
   owner: string;
+  dealer: string;
   members: User[];
 
   game?: Game;

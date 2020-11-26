@@ -34,11 +34,11 @@ const Game = (props: GameProps) => {
   }
 
   const members = Object.values(room.members);
-  const ownerIndex = members.findIndex((u) => u.id === room.owner);
+  const dealerIndex = members.findIndex((u) => u.id === room.dealer);
 
   return (
     <div>
-      {currentUser.uid === room.owner && !room.game ? (
+      {currentUser.uid === room.dealer && !room.game ? (
         <button
           onClick={() => {
             const game = generateGame(members, currentUser.uid);
@@ -49,7 +49,7 @@ const Game = (props: GameProps) => {
           Deal{members.length < 2 ? ' (Need at least 2 players)' : ''}
         </button>
       ) : !room.game ? (
-        <div>Waiting for {members[ownerIndex].nickname} to deal</div>
+        <div>Waiting for {members[dealerIndex].nickname} to deal</div>
       ) : null}
       {room.game ? (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -71,11 +71,13 @@ const Game = (props: GameProps) => {
           <h3>Members</h3>
           {members.map((m) => {
             const isCurrentPlayer = m.id === room.game?.turn;
+            const isDealer = m.id === room.dealer;
             const hasSkipped = (room.game?.skipped || []).indexOf(m.id) !== -1;
             const hand = room.game?.hands ? room.game?.hands[m.id] : undefined;
 
             return (
               <div key={m.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+                {isDealer && <div style={{ marginRight: 10 }}>Dealer</div>}
                 <div
                   style={{
                     padding: 5,

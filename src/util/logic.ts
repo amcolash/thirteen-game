@@ -57,7 +57,9 @@ export function checkAndHandleWin(room: Room, user: User, db: firebase.database.
   const members = Object.values(room.members);
   const skipped = room.game.skipped || [];
   const delay = 4000;
-  const gameRef = db.ref(`${roomsPath}/${room.id}/game`);
+
+  const roomRef = db.ref(`${roomsPath}/${room.id}`);
+  const gameRef = roomRef.child('game');
 
   if (skipped.length === members.length - 1) {
     const winner = members.filter((u) => skipped.indexOf(u.id) === -1)[0];
@@ -67,7 +69,7 @@ export function checkAndHandleWin(room: Room, user: User, db: firebase.database.
     console.log(info);
 
     // TODO: Room creator does win logic (so no dupe running of code. This should later be the dealer)
-    if (room.owner !== user.id) return;
+    if (room.dealer !== user.id) return;
 
     const nextTurn = room.game.lastPlayer || user.id;
 
@@ -78,7 +80,7 @@ export function checkAndHandleWin(room: Room, user: User, db: firebase.database.
       lastPlayer: null,
       skipped: [],
     });
-  } else {
+  } else if (room.game) {
     members.forEach((u: User) => {
       if (!room.game!.hands[u.id]) {
         const info = `Game Over! ${u.id === user.id ? 'You win the game.' : `${u.nickname} wins the game.`}`;
@@ -86,8 +88,13 @@ export function checkAndHandleWin(room: Room, user: User, db: firebase.database.
         console.log(info);
 
         // TODO: Room creator does win logic (so no dupe running of code. This should later be the dealer)
-        if (room.owner !== user.id) return;
+        if (room.dealer !== user.id) return;
+
+        const currentIndex = members.findIndex((u) => u.id === room.dealer);
+        const dealer = members[(currentIndex + 1) % members.length];
+
         gameRef.set(null);
+        roomRef.update({ dealer: dealer.id });
       }
     });
   }

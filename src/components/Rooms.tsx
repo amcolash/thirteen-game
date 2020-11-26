@@ -37,7 +37,7 @@ const nameGeneratorConfig: Config = {
 
 const newRoom = (name: string, user: User, userRef: firebase.database.Reference, roomsRef: firebase.database.Reference) => {
   if (name.length > 0) {
-    const room: Room = { id: uuidv4(), name, password: '', owner: user.id, members: [] };
+    const room: Room = { id: uuidv4(), name, password: '', owner: user.id, dealer: user.id, members: [] };
     roomsRef.child(room.id).set({ ...room });
 
     changeRoom(user, userRef, roomsRef, room);
