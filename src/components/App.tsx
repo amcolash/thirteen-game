@@ -45,6 +45,12 @@ cssRule('button:disabled, input:disabled', {
   color: '#777',
 });
 
+cssRule('.Toastify__close-button', {
+  borderRadius: 'unset',
+  fontSize: 'unset',
+  margin: 'unset',
+});
+
 const App = () => {
   return (
     <div className={appStyle}>

@@ -1,10 +1,9 @@
 import firebase from 'firebase';
 import React, { useEffect } from 'react';
-import { toast } from 'react-toastify';
 import { useAuth, useUser, useDatabase, useDatabaseObjectData } from 'reactfire';
 import { roomsPath, Room, usersPath, User, Card } from '../util/data';
 import { generateGame } from '../util/generate';
-import { playCard } from '../util/logic';
+import { checkAndHandleWin, playCard } from '../util/logic';
 import PlayerHand from './PlayerHand';
 
 interface GameProps {
@@ -24,32 +23,8 @@ const Game = (props: GameProps) => {
   const room = useDatabaseObjectData(roomRef) as Room;
 
   useEffect(() => {
-    if (!room.game) return;
-
-    const skipped = room.game.skipped || [];
-    if (skipped.length === Object.values(room.members).length - 1) {
-      const delay = 4000;
-
-      const winner = Object.values(room.members).filter((u) => skipped.indexOf(u.id) === -1)[0];
-
-      toast.info(`Round Over! ${winner ? (winner.id === user.id ? 'You win' : `${winner.nickname} wins`) : '??? wins'}`, {
-        autoClose: delay,
-      });
-      console.log(`Round Over! ${winner ? (winner.id === user.id ? 'You win' : `${winner.nickname} wins`) : '??? wins'}`);
-
-      const nextTurn = room.game.lastPlayer || user.id;
-
-      // Only end game when neither computer nor player can play more
-      const gameRef = db.ref(`${roomsPath}/${room.id}/game`);
-      gameRef.update({
-        lastCard: null,
-        playedCards: [],
-        turn: nextTurn,
-        lastPlayer: null,
-        skipped: [],
-      });
-    }
-  }, [room, user.id, db]);
+    checkAndHandleWin(room, user, db);
+  }, [room, user, db]);
 
   // If the room was deleted, recover gracefully
   if (JSON.stringify(room) === '{}') {

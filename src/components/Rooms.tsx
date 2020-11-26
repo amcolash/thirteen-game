@@ -6,6 +6,7 @@ import { uniqueNamesGenerator, Config, adjectives, animals } from 'unique-names-
 import { v4 as uuidv4 } from 'uuid';
 
 import { Room, roomsPath, User, usersPath } from '../util/data';
+import { debounce } from '../util/logic';
 import FancyInput from './FancyInput';
 import Game from './Game';
 import RoomList from './RoomList';
@@ -27,7 +28,7 @@ const randomNameClass = style({
   },
 });
 
-const customConfig: Config = {
+const nameGeneratorConfig: Config = {
   dictionaries: [adjectives, animals],
   separator: ' ',
   length: 2,
@@ -67,6 +68,9 @@ const changeRoom = (user: User, userRef: firebase.database.Reference, roomsRef: 
   userRef.update({ currentRoom: newRoom ? newRoom.id : null });
 };
 
+const randomName = (userRef: firebase.database.Reference, value: string) => userRef.update({ nickname: value });
+const debouncedName = debounce(randomName, 1000);
+
 const Rooms = () => {
   const auth = useAuth();
   const currentUser = useUser() as firebase.User;
@@ -82,7 +86,11 @@ const Rooms = () => {
   // Update user db node on creation and whenever the underlying data changes
   useEffect(() => {
     const userRef = db.ref(`${usersPath}/${currentUser.uid}`);
-    userRef.update({ email: currentUser.email, id: currentUser.uid, nickname: user.nickname || uniqueNamesGenerator(customConfig) });
+    userRef.update({
+      email: currentUser.email,
+      id: currentUser.uid,
+      nickname: user.nickname !== undefined ? user.nickname : uniqueNamesGenerator(nameGeneratorConfig),
+    });
   }, [currentUser, user, db]);
 
   return (
@@ -96,12 +104,12 @@ const Rooms = () => {
             <FancyInput
               placeholder="Enter a nickname"
               initialValue={user.nickname}
-              onChange={(value: string) => userRef.update({ nickname: value })}
+              onChange={(value: string) => debouncedName(userRef, value)}
             >
               <Repeat
                 size={20}
                 className={randomNameClass}
-                onClick={() => userRef.update({ nickname: uniqueNamesGenerator(customConfig) })}
+                onClick={() => userRef.update({ nickname: uniqueNamesGenerator(nameGeneratorConfig) })}
               />
             </FancyInput>
             <button style={{ marginLeft: 0 }} onClick={() => auth.signOut()}>
