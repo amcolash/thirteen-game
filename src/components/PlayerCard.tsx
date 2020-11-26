@@ -1,5 +1,4 @@
 import React from 'react';
-import Draggable from 'react-draggable';
 
 import { style } from 'typestyle';
 import { Card } from '../util/data';
@@ -35,16 +34,6 @@ const cardStlying = style({
   },
 });
 
-// function lerp(v0: number, v1: number, t: number) {
-//   return v0 * (1 - t) + v1 * t;
-// }
-
-// function lerpMulti(amt: number, values: number[]) {
-//   if (values.length === 1) return values[0];
-//   const cunit = 1.0 / (values.length - 1);
-//   return lerp(values[Math.floor(amt / cunit)], values[Math.ceil(amt / cunit)], (amt % cunit) / cunit);
-// }
-
 interface PlayerCardProps {
   card: Card;
   index?: number;
@@ -55,25 +44,16 @@ interface PlayerCardProps {
 
 const PlayerCard = (props: PlayerCardProps) => {
   return (
-    <Draggable
-      disabled={!props.enabled}
-      onStop={() => {
+    <div
+      className={cardStlying + (props.enabled || props.normal ? ' enabled' : '')}
+      style={{ marginLeft: props.index === 0 ? 0 : undefined }}
+      onClick={() => {
         if (props.playCard) props.playCard(props.card);
       }}
-      key={props.card.suit + props.card.value}
     >
-      {/*Draggable does not play nice with pre-styled transforms - thinking emoji...*/}
-      <div
-        className={cardStlying + (props.enabled || props.normal ? ' enabled' : '')}
-        style={{
-          marginLeft: props.index === 0 ? 0 : undefined,
-          // transform: `rotate(${lerp(-20, 20, props.index / 13)}deg) translateY(${lerpMulti(props.index / 13, [0, -20, -30, -20, 0]) + 10}px)`,
-        }}
-      >
-        <div style={{ position: 'absolute', top: size / 3, left: size / 3 }}>{generateCardInfo(props.card, true, true)}</div>
-        <div style={{ position: 'absolute', bottom: size / 3, right: size / 3 }}>{generateCardInfo(props.card, true, false)}</div>
-      </div>
-    </Draggable>
+      <div style={{ position: 'absolute', top: size / 3, left: size / 3 }}>{generateCardInfo(props.card, true, true)}</div>
+      <div style={{ position: 'absolute', bottom: size / 3, right: size / 3 }}>{generateCardInfo(props.card, true, false)}</div>
+    </div>
   );
 };
 

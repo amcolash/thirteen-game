@@ -53,7 +53,7 @@ const Game = (props: GameProps) => {
       ) : null}
       {room.game ? (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          {room.game?.lastCard && <PlayerCard card={room.game.lastCard} index={0} normal={true} />}
+          {room.game?.lastPlayed && <PlayerCard card={room.game.lastPlayed[0]} index={0} normal={true} />}
           <PlayerHand user={user} game={room.game} playCard={(card?: Card) => playCard(room, user, roomRef, card)} />
         </div>
       ) : null}

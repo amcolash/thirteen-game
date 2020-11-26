@@ -31,14 +31,18 @@ export function playCard(room: Room, user: User, roomRef: firebase.database.Refe
     hands,
     playedCards,
     skipped,
-    lastCard: card || game.lastCard || null,
+    lastPlayed: card ? [card] : game.lastPlayed || null,
     lastPlayer: card ? turn : game.lastPlayer || null,
     turn: members[nextIndex].id,
   });
 }
 
-export function cardWins(a: Card, b?: Card | null): boolean {
-  if (!b || b === null) return true;
+export function cardsWin(setA: Card[], setB?: Card[] | null): boolean {
+  if (!setB || setB === null) return true;
+
+  // TOOD: Support the full set
+  const a = setA[0];
+  const b = setB[0];
 
   if (a.value === b.value) {
     return suitOrdinal[a.suit] > suitOrdinal[b.suit];
@@ -65,7 +69,7 @@ export function checkAndHandleWin(room: Room, user: User, db: firebase.database.
     // Only end game when neither computer nor player can play more
     const gameRef = db.ref(`${roomsPath}/${room.id}/game`);
     gameRef.update({
-      lastCard: null,
+      lastPlayed: null,
       playedCards: [],
       turn: nextTurn,
       lastPlayer: null,

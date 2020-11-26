@@ -6,7 +6,7 @@ import { style } from 'typestyle';
 import { Card, Deck } from '../util/data';
 
 import { generateCardInfo, sortHand } from '../util/generate';
-import { cardWins } from '../util/logic';
+import { cardsWin } from '../util/logic';
 
 import DebugDeck from './DeckDebug';
 import PlayerCard from './PlayerCard';
@@ -90,14 +90,14 @@ export default class GameOld extends React.Component<GameOldProps, GameOldState>
     );
   }
 
-  chooseCard(hand: Card[], lastCard?: Card): Card | undefined {
+  chooseCard(hand: Card[], lastPlayed?: Card[]): Card | undefined {
     const sorted = sortHand(hand);
 
-    if (!lastCard) return sorted[0];
+    if (!lastPlayed) return sorted[0];
     else {
       for (let i = 0; i < sorted.length; i++) {
         const card = sorted[i];
-        if (cardWins(card, lastCard)) return card;
+        if (cardsWin([card], lastPlayed)) return card;
       }
     }
   }
@@ -112,8 +112,8 @@ export default class GameOld extends React.Component<GameOldProps, GameOldState>
     if (this.state.turn === -1) return;
 
     if (this.state.turn !== this.state.currentPlayer && !this.state.skipped[this.state.turn]) {
-      const chosen = this.chooseCard(this.state.hands[this.state.turn], this.state.lastCard);
-      this.playCard(chosen);
+      // const chosen = this.chooseCard(this.state.hands[this.state.turn], this.state.lastPlayed);
+      // this.playCard(chosen);
     } else if (!this.state.skipped[this.state.currentPlayer]) {
       const hand = this.state.hands[this.state.currentPlayer];
       const sorted = sortHand(hand);

@@ -8,7 +8,7 @@ export interface Game {
   deck: Deck;
   hands: { [user: string]: Card[] };
   playedCards: Card[];
-  lastCard?: Card;
+  lastPlayed?: Card[];
   lastPlayer?: string;
   turn: string; // player making their move
   skipped?: string[];

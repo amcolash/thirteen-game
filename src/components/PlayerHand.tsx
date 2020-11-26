@@ -2,7 +2,7 @@ import React from 'react';
 import { style } from 'typestyle';
 
 import { Card, Game, User } from '../util/data';
-import { cardWins } from '../util/logic';
+import { cardsWin } from '../util/logic';
 import PlayerCard from './PlayerCard';
 
 const handStlying = style({
@@ -31,7 +31,7 @@ const PlayerHand = (props: PlayerHandProps) => {
             card={card}
             index={index}
             key={index}
-            enabled={enabled && cardWins(card, props.game.lastCard)}
+            enabled={enabled && cardsWin([card], props.game.lastPlayed)}
             playCard={props.playCard}
           />
         ))}
