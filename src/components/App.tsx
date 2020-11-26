@@ -25,6 +25,24 @@ const appStyle = style({
 
 cssRule('button, input', {
   margin: 5,
+  padding: 8,
+  fontSize: 14,
+  background: '#eee',
+  color: '#333',
+  border: '2px solid #555',
+  borderRadius: 5,
+  transition: 'all 0.5s',
+});
+
+cssRule('button:not(:disabled):hover, input:not(:disabled):hover', {
+  borderColor: '#333',
+  background: '#bdb',
+  boxShadow: '0 0 5px rgba(0,0,0,0.2)',
+});
+
+cssRule('button:disabled, input:disabled', {
+  background: '#bbb',
+  color: '#777',
 });
 
 const App = () => {
