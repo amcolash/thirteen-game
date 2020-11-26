@@ -26,20 +26,15 @@ export function playCard(room: Room, user: User, roomRef: firebase.database.Refe
     nextIndex = (nextIndex + 1) % members.length;
   }
 
-  setTimeout(
-    () => {
-      const gameRef = roomRef.child('game');
-      gameRef.update({
-        hands,
-        playedCards,
-        skipped,
-        lastCard: card || game.lastCard || null,
-        lastPlayer: card ? turn : game.lastPlayer || null,
-        turn: members[nextIndex].id,
-      });
-    },
-    turn === user.id || card === undefined ? 0 : 1500
-  );
+  const gameRef = roomRef.child('game');
+  gameRef.update({
+    hands,
+    playedCards,
+    skipped,
+    lastCard: card || game.lastCard || null,
+    lastPlayer: card ? turn : game.lastPlayer || null,
+    turn: members[nextIndex].id,
+  });
 }
 
 export function cardWins(a: Card, b?: Card | null): boolean {
@@ -61,10 +56,9 @@ export function checkAndHandleWin(room: Room, user: User, db: firebase.database.
 
     const winner = Object.values(room.members).filter((u) => skipped.indexOf(u.id) === -1)[0];
 
-    toast.info(`Round Over! ${winner ? (winner.id === user.id ? 'You win' : `${winner.nickname} wins`) : '??? wins'}`, {
-      autoClose: delay,
-    });
-    console.log(`Round Over! ${winner ? (winner.id === user.id ? 'You win' : `${winner.nickname} wins`) : '??? wins'}`);
+    const info = `Round Over! ${winner.id === user.id ? 'You win the round.' : `${winner.nickname} wins the round.`}`;
+    toast.info(info, { autoClose: delay });
+    console.log(info);
 
     const nextTurn = room.game.lastPlayer || user.id;
 

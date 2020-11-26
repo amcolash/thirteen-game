@@ -34,7 +34,6 @@ const Game = (props: GameProps) => {
   }
 
   const members = Object.values(room.members);
-  const currentIndex = members.findIndex((u) => u.id === room.game?.turn);
   const ownerIndex = members.findIndex((u) => u.id === room.owner);
 
   return (
@@ -71,20 +70,24 @@ const Game = (props: GameProps) => {
         <div>
           <h3>Members</h3>
           {members.map((m) => {
-            const current = m.id === room.game?.turn;
+            const isCurrentPlayer = m.id === room.game?.turn;
+            const hasSkipped = (room.game?.skipped || []).indexOf(m.id) !== -1;
 
             return (
-              <div
-                key={m.id}
-                style={{
-                  padding: 5,
-                  textDecoration: (room.game?.skipped || []).indexOf(m.id) !== -1 ? 'line-through' : undefined,
-                  fontWeight: current ? 'bold' : undefined,
-                  border: current ? '1px solid white' : undefined,
-                }}
-              >
-                {m.nickname}
-                {current ? '*' : ''}
+              <div key={m.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+                <div
+                  style={{
+                    padding: 5,
+                    marginRight: 10,
+                    textDecoration: hasSkipped ? 'line-through' : undefined,
+                    fontWeight: isCurrentPlayer ? 'bold' : undefined,
+                    border: isCurrentPlayer ? '1px solid white' : undefined,
+                  }}
+                >
+                  {m.nickname}
+                  {isCurrentPlayer ? '*' : ''}
+                </div>
+                <div>({room.game?.hands[m.id].length})</div>
               </div>
             );
           })}
