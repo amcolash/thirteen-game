@@ -1,5 +1,5 @@
-[ ] Game Over (single winner w/o continue)
-[ ] Rotate Dealer
+[X] Game Over (single winner w/o continue)
+[ ] Add dealer / Rotate Dealer on win
 [ ] Keep track of ranks
 [ ] Scoring / win count
 [ ] Selecting cards / Wait till play button pressed

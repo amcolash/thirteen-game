@@ -72,6 +72,7 @@ const Game = (props: GameProps) => {
           {members.map((m) => {
             const isCurrentPlayer = m.id === room.game?.turn;
             const hasSkipped = (room.game?.skipped || []).indexOf(m.id) !== -1;
+            const hand = room.game?.hands ? room.game?.hands[m.id] : undefined;
 
             return (
               <div key={m.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
@@ -87,7 +88,7 @@ const Game = (props: GameProps) => {
                   {m.nickname}
                   {isCurrentPlayer ? '*' : ''}
                 </div>
-                <div>({room.game?.hands[m.id].length})</div>
+                {hand && <div>({hand.length})</div>}
               </div>
             );
           })}

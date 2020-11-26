@@ -22,11 +22,14 @@ interface PlayerHandProps {
 
 const PlayerHand = (props: PlayerHandProps) => {
   const enabled = props.user.id === props.game.turn;
+  const hand = props.game.hands[props.user.id];
+
+  if (!hand) return null;
 
   return (
     <div style={{ paddingTop: 20, textAlign: 'center' }}>
       <div className={handStlying}>
-        {props.game.hands[props.user.id].map((card: Card, index) => (
+        {hand.map((card: Card, index) => (
           <PlayerCard
             card={card}
             index={index}

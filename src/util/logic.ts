@@ -54,26 +54,41 @@ export function cardsWin(setA: Card[], setB?: Card[] | null): boolean {
 export function checkAndHandleWin(room: Room, user: User, db: firebase.database.Database): void {
   if (!room.game) return;
 
+  const members = Object.values(room.members);
   const skipped = room.game.skipped || [];
-  if (skipped.length === Object.values(room.members).length - 1) {
-    const delay = 4000;
+  const delay = 4000;
+  const gameRef = db.ref(`${roomsPath}/${room.id}/game`);
 
-    const winner = Object.values(room.members).filter((u) => skipped.indexOf(u.id) === -1)[0];
+  if (skipped.length === members.length - 1) {
+    const winner = members.filter((u) => skipped.indexOf(u.id) === -1)[0];
 
     const info = `Round Over! ${winner.id === user.id ? 'You win the round.' : `${winner.nickname} wins the round.`}`;
     toast.info(info, { autoClose: delay });
     console.log(info);
 
+    // TODO: Room creator does win logic (so no dupe running of code. This should later be the dealer)
+    if (room.owner !== user.id) return;
+
     const nextTurn = room.game.lastPlayer || user.id;
 
-    // Only end game when neither computer nor player can play more
-    const gameRef = db.ref(`${roomsPath}/${room.id}/game`);
     gameRef.update({
       lastPlayed: null,
       playedCards: [],
       turn: nextTurn,
       lastPlayer: null,
       skipped: [],
+    });
+  } else {
+    members.forEach((u: User) => {
+      if (!room.game!.hands[u.id]) {
+        const info = `Game Over! ${u.id === user.id ? 'You win the game.' : `${u.nickname} wins the game.`}`;
+        toast.info(info, { autoClose: delay });
+        console.log(info);
+
+        // TODO: Room creator does win logic (so no dupe running of code. This should later be the dealer)
+        if (room.owner !== user.id) return;
+        gameRef.set(null);
+      }
     });
   }
 }
