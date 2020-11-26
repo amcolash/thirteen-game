@@ -61,8 +61,9 @@ const Rooms = () => {
 
   // Update user db node on creation and whenever the underlying data changes
   useEffect(() => {
+    const userRef = db.ref(`${usersPath}/${currentUser.uid}`);
     userRef.update({ email: currentUser.email, id: currentUser.uid, nickname: user.nickname || uniqueNamesGenerator(customConfig) });
-  }, [currentUser, userRef]);
+  }, [currentUser, user, db]);
 
   return (
     <Suspense fallback="loading">

@@ -5,7 +5,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import { style } from 'typestyle';
 import { Card, Deck } from '../util/data';
 
-import { cardWins, generateCardInfo, sortHand } from '../util/generate';
+import { generateCardInfo, sortHand } from '../util/generate';
+import { cardWins } from '../util/logic';
+
 import DebugDeck from './DeckDebug';
 import PlayerCard from './PlayerCard';
 import PlayerHand from './PlayerHand';

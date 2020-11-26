@@ -1,7 +1,8 @@
 import React from 'react';
 import { style } from 'typestyle';
+
 import { Card, Game, User } from '../util/data';
-import { cardWins } from '../util/generate';
+import { cardWins } from '../util/logic';
 import PlayerCard from './PlayerCard';
 
 const handStlying = style({
@@ -16,10 +17,12 @@ const handStlying = style({
 interface PlayerHandProps {
   game: Game;
   user: User;
-  playCard: (card: Card) => void;
+  playCard: (card?: Card) => void;
 }
 
 const PlayerHand = (props: PlayerHandProps) => {
+  const enabled = props.user.id === props.game.turn;
+
   return (
     <div style={{ paddingTop: 20, textAlign: 'center' }}>
       <div className={handStlying}>
@@ -28,11 +31,14 @@ const PlayerHand = (props: PlayerHandProps) => {
             card={card}
             index={index}
             key={index}
-            enabled={props.user.id === props.game.turn && cardWins(card, props.game.lastCard)}
+            enabled={enabled && cardWins(card, props.game.lastCard)}
             playCard={props.playCard}
           />
         ))}
       </div>
+      <button onClick={() => props.playCard()} disabled={!enabled}>
+        Skip Turn
+      </button>
     </div>
   );
 };

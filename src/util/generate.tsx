@@ -8,10 +8,9 @@ export function generateGame(players: User[], player: string): Game {
   return {
     deck,
     hands,
-    numPlayers: players.length,
     playedCards: [],
     turn: player,
-    skipped: {},
+    skipped: [],
   };
 }
 
@@ -82,16 +81,6 @@ export function sortHand(hand: Card[]): Card[] {
   });
 
   return hand;
-}
-
-export function cardWins(a: Card, b?: Card | null): boolean {
-  if (!b || b === null) return true;
-
-  if (a.value === b.value) {
-    return suitOrdinal[a.suit] > suitOrdinal[b.suit];
-  } else {
-    return cardOrdinal[a.value] > cardOrdinal[b.value];
-  }
 }
 
 export function generateCardInfo(card: Card, vertical: boolean, reverse: boolean, style?: CSSProperties): React.ReactNode {

@@ -7,12 +7,11 @@ export const usersPath = `/users`;
 export interface Game {
   deck: Deck;
   hands: { [user: string]: Card[] };
-  numPlayers: number;
   playedCards: Card[];
   lastCard?: Card;
   lastPlayer?: string;
   turn: string; // player making their move
-  skipped: { [user: string]: boolean };
+  skipped?: string[];
 }
 
 export interface Room {

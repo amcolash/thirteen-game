@@ -2,6 +2,8 @@ import 'firebase/auth';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { FirebaseAppProvider } from 'reactfire/firebaseApp';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { cssRule } from 'typestyle';
 
 import { config } from './util/firebase_config';
@@ -15,6 +17,7 @@ ReactDOM.render(
   <React.StrictMode>
     <FirebaseAppProvider firebaseConfig={config}>
       <App />
+      <ToastContainer hideProgressBar />
     </FirebaseAppProvider>
   </React.StrictMode>,
   document.getElementById('root')
