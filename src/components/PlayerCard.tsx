@@ -16,7 +16,7 @@ const cardStlying = style({
   position: 'relative',
 
   padding: 10,
-  background: '#ccc',
+  background: '#aaa',
   border: '2px solid #bbb',
   textShadow: 'none',
   textAlign: 'center',
@@ -47,8 +47,9 @@ const cardStlying = style({
 
 interface PlayerCardProps {
   card: Card;
-  index: number;
+  index?: number;
   enabled?: boolean;
+  normal?: boolean;
   playCard?: (card: Card) => void;
 }
 
@@ -63,9 +64,9 @@ const PlayerCard = (props: PlayerCardProps) => {
     >
       {/*Draggable does not play nice with pre-styled transforms - thinking emoji...*/}
       <div
-        className={cardStlying + (props.enabled ? ' enabled' : '')}
+        className={cardStlying + (props.enabled || props.normal ? ' enabled' : '')}
         style={{
-          marginLeft: props.index === 0 ? 8 : undefined,
+          marginLeft: props.index === 0 ? 0 : undefined,
           // transform: `rotate(${lerp(-20, 20, props.index / 13)}deg) translateY(${lerpMulti(props.index / 13, [0, -20, -30, -20, 0]) + 10}px)`,
         }}
       >

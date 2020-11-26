@@ -4,6 +4,7 @@ import { useAuth, useUser, useDatabase, useDatabaseObjectData } from 'reactfire'
 import { roomsPath, Room, usersPath, User, Card } from '../util/data';
 import { generateGame } from '../util/generate';
 import { checkAndHandleWin, playCard } from '../util/logic';
+import PlayerCard from './PlayerCard';
 import PlayerHand from './PlayerHand';
 
 interface GameProps {
@@ -52,8 +53,8 @@ const Game = (props: GameProps) => {
         <div>Waiting for {members[ownerIndex].nickname} to deal</div>
       ) : null}
       {room.game ? (
-        <div>
-          {currentIndex > -1 && <div>Turn: {members[currentIndex].id === user.id ? 'You' : members[currentIndex].nickname}</div>}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          {room.game?.lastCard && <PlayerCard card={room.game.lastCard} index={0} normal={true} />}
           <PlayerHand user={user} game={room.game} playCard={(card?: Card) => playCard(room, user, roomRef, card)} />
         </div>
       ) : null}
@@ -69,9 +70,24 @@ const Game = (props: GameProps) => {
         </div>
         <div>
           <h3>Members</h3>
-          {members.map((m) => (
-            <div key={m.id}>{m.nickname}</div>
-          ))}
+          {members.map((m) => {
+            const current = m.id === room.game?.turn;
+
+            return (
+              <div
+                key={m.id}
+                style={{
+                  padding: 5,
+                  textDecoration: (room.game?.skipped || []).indexOf(m.id) !== -1 ? 'line-through' : undefined,
+                  fontWeight: current ? 'bold' : undefined,
+                  border: current ? '1px solid white' : undefined,
+                }}
+              >
+                {m.nickname}
+                {current ? '*' : ''}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

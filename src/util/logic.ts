@@ -20,7 +20,11 @@ export function playCard(room: Room, user: User, roomRef: firebase.database.Refe
 
   const members = Object.values(room.members);
   const currentIndex = members.findIndex((u) => u.id === game.turn);
-  const nextIndex = (currentIndex + 1) % members.length;
+
+  let nextIndex = (currentIndex + 1) % members.length;
+  while (skipped.indexOf(members[nextIndex].id) !== -1) {
+    nextIndex = (nextIndex + 1) % members.length;
+  }
 
   setTimeout(
     () => {
