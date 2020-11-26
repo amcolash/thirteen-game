@@ -24,7 +24,7 @@ const RoomList = (props: RoomListProps) => {
                   <div>
                     {room.name}, Players: ({members.length} / 4)
                   </div>
-                  <button onClick={() => props.changeRoom(room)} disabled={members.length > 3}>
+                  <button onClick={() => props.changeRoom(room)} disabled={members.length > 3 || room.game !== undefined}>
                     Join
                   </button>
                 </div>

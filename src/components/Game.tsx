@@ -1,8 +1,9 @@
 import firebase from 'firebase';
 import React from 'react';
 import { useAuth, useUser, useDatabase, useDatabaseObjectData } from 'reactfire';
-import { roomsPath, Room, usersPath, User } from '../util/data';
+import { roomsPath, Room, usersPath, User, Card } from '../util/data';
 import { generateGame } from '../util/generate';
+import PlayerHand from './PlayerHand';
 
 interface GameProps {
   currentRoom: string;
@@ -42,6 +43,17 @@ const Game = (props: GameProps) => {
           Deal{members.length < 2 ? ' (Need at least 2 players)' : ''}
         </button>
       ) : null}
+      {room.game ? (
+        <PlayerHand
+          user={user}
+          game={room.game}
+          playCard={(card: Card) => {
+            //this.playCard(card)}
+            return;
+          }}
+        />
+      ) : null}
+
       <div style={{ position: 'absolute', top: 20, right: 20, display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
         <div>
           <span>Current Room: {props.currentRoom}</span>

@@ -9,7 +9,7 @@ import RoomList from './RoomList';
 
 const newRoom = (name: string, user: User, userRef: firebase.database.Reference, roomsRef: firebase.database.Reference) => {
   if (name.length > 0) {
-    const room: Room = { id: uuidv4(), name, password: '', owner: user.id, members: [], game: null };
+    const room: Room = { id: uuidv4(), name, password: '', owner: user.id, members: [] };
     roomsRef.child(room.id).set({ ...room });
 
     changeRoom(user, userRef, roomsRef, room);

@@ -10,8 +10,6 @@ export function generateGame(players: User[], player: string): Game {
     hands,
     numPlayers: players.length,
     playedCards: [],
-    lastCard: null,
-    lastPlayer: null,
     turn: player,
     skipped: {},
   };
@@ -86,8 +84,8 @@ export function sortHand(hand: Card[]): Card[] {
   return hand;
 }
 
-export function cardWins(a: Card, b?: Card): boolean {
-  if (b === undefined) return true;
+export function cardWins(a: Card, b?: Card | null): boolean {
+  if (!b || b === null) return true;
 
   if (a.value === b.value) {
     return suitOrdinal[a.suit] > suitOrdinal[b.suit];

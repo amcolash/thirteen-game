@@ -9,8 +9,8 @@ export interface Game {
   hands: { [user: string]: Card[] };
   numPlayers: number;
   playedCards: Card[];
-  lastCard: Card | null;
-  lastPlayer: string | null;
+  lastCard?: Card;
+  lastPlayer?: string;
   turn: string; // player making their move
   skipped: { [user: string]: boolean };
 }
@@ -22,7 +22,7 @@ export interface Room {
   owner: string;
   members: User[];
 
-  game: Game | null;
+  game?: Game;
 }
 
 export interface User {

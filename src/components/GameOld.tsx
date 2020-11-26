@@ -117,8 +117,8 @@ export default class GameOld extends React.Component<GameOldProps, GameOldState>
       const sorted = sortHand(hand);
       let skip: boolean = true;
       for (let i = 0; i < sorted.length; i++) {
-        const card = sorted[i];
-        if (cardWins(card, this.state.lastCard)) skip = false;
+        // const card = sorted[i];
+        // if (cardWins(card, this.state.lastCard)) skip = false;
       }
 
       if (skip) {
@@ -164,13 +164,13 @@ export default class GameOld extends React.Component<GameOldProps, GameOldState>
           {this.state.playedCards.map((card: Card) => generateCardInfo(card, false, false, { padding: 4 }))}
         </div>
 
-        <PlayerHand
+        {/* <PlayerHand
           player={this.state.currentPlayer}
           turn={this.state.turn}
           lastCard={this.state.lastCard}
           hand={this.state.hands[this.state.currentPlayer]}
           playCard={(card: Card) => this.playCard(card)}
-        />
+        /> */}
         <div style={{ position: 'absolute', top: 20, right: 20, display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
           <div>Current Room: {this.props.currentRoom}</div>
           <div>
